@@ -1,0 +1,23 @@
+# 本地测试HTTP文件
+
+### 获取示例JSON
+GET http://httpbin.org/json
+Accept: application/json
+
+### 获取示例HTML
+GET http://httpbin.org/html
+Accept: text/html
+
+### 发送POST请求
+POST http://httpbin.org/post
+Content-Type: application/json
+
+{
+  "name": "测试用户",
+  "age": 30,
+  "email": "test@example.com"
+}
+
+### 带查询参数的GET请求
+GET http://httpbin.org/get?param1=value1&param2=value2
+Accept: application/json 

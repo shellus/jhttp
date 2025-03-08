@@ -1,0 +1,43 @@
+# 通用
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.bak
+.idea/
+.vscode/
+*.sublime-*
+
+# Go特定
+*.o
+*.a
+*.so
+_obj
+_test
+*.exe
+*.test
+*.prof
+*.out
+vendor/
+.glide/
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+profile.out
+coverage.txt
+go.work
+
+# 环境变量和敏感信息
+*.private.env.json
+http-client.private.env.json
+*.env
+.env*
+config.local.json
+secrets.json
+
+# 构建输出
+bin/
+jhttp
+dist/ 
