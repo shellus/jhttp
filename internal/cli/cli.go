@@ -58,7 +58,7 @@ func PrintUsage(w io.Writer, progName string) {
 	fmt.Fprintf(w, "  %s 是一个命令行工具，用于执行IntelliJ IDEA格式的.http文件。\n\n", progName)
 	fmt.Fprintf(w, "选项:\n")
 	fmt.Fprintf(w, "  --env-file <file>     指定环境变量文件路径\n")
-	fmt.Fprintf(w, "  --env <name>          指定使用的环境名称\n")
+	fmt.Fprintf(w, "  --env <name>          指定使用的环境名称（支持自动查找环境文件）\n")
 	fmt.Fprintf(w, "  --request <name>      指定要执行的请求名称\n")
 	fmt.Fprintf(w, "  --output <file>       指定响应输出文件\n")
 	fmt.Fprintf(w, "  --verbose             输出详细信息\n")
@@ -67,6 +67,7 @@ func PrintUsage(w io.Writer, progName string) {
 	fmt.Fprintf(w, "  --list                列出所有请求名称\n\n")
 	fmt.Fprintf(w, "示例:\n")
 	fmt.Fprintf(w, "  %s example.http\n", progName)
-	fmt.Fprintf(w, "  %s --env production example.http\n", progName)
-	fmt.Fprintf(w, "  %s --request \"Get User\" example.http\n", progName)
+	fmt.Fprintf(w, "  %s --env 开发环境 example.http           # 自动查找环境文件\n", progName)
+	fmt.Fprintf(w, "  %s --env-file env.json --env 开发环境 example.http\n", progName)
+	fmt.Fprintf(w, "  %s --request \"获取用户信息\" example.http\n", progName)
 }
