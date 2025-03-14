@@ -5,10 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/jhttp/jhttp/internal/cli"
-	"github.com/jhttp/jhttp/internal/environment"
-	"github.com/jhttp/jhttp/internal/executor"
-	"github.com/jhttp/jhttp/internal/parser"
+	"github.com/shellus/jhttp/internal/cli"
+	"github.com/shellus/jhttp/internal/environment"
+	"github.com/shellus/jhttp/internal/executor"
+	"github.com/shellus/jhttp/internal/parser"
 )
 
 const (

@@ -36,7 +36,7 @@ JHTTP是一个命令行工具，用于执行IntelliJ IDEA支持的.http文件。
 
 ```bash
 # 克隆仓库
-git clone https://github.com/jhttp/jhttp.git
+git clone https://github.com/shellus/jhttp.git
 cd jhttp
 
 # 构建项目
@@ -49,7 +49,7 @@ sudo mv jhttp /usr/local/bin/
 ### 使用Go工具安装
 
 ```bash
-go install github.com/jhttp/jhttp/cmd/jhttp@latest
+go install github.com/shellus/jhttp/cmd/jhttp@latest
 ```
 
 ## 使用方法
@@ -190,4 +190,4 @@ jhttp/
 
 ## 联系方式
 
-项目GitHub地址: https://github.com/jhttp/jhttp 
+项目GitHub地址: https://github.com/shellus/jhttp 

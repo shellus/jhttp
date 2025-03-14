@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jhttp/jhttp/internal/models"
-	"github.com/jhttp/jhttp/internal/parser"
+	"github.com/shellus/jhttp/internal/models"
+	"github.com/shellus/jhttp/internal/parser"
 )
 
 // Executor HTTP请求执行器

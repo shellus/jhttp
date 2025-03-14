@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jhttp/jhttp/internal/models"
+	"github.com/shellus/jhttp/internal/models"
 )
 
 // 正则表达式定义
