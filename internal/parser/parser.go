@@ -47,6 +47,7 @@ func ParseFile(filePath string) (*models.HTTPFile, error) {
 	var isReadingBody bool
 	var bodyBuilder strings.Builder
 	var currentName string
+	var currentDescription string
 	var readingRequestComment bool      // 用于标记是否正在读取请求注释
 	var foundEmptyLineAfterHeaders bool // 用于标记是否找到了请求头之后的空行
 
@@ -80,23 +81,24 @@ func ParseFile(filePath string) (*models.HTTPFile, error) {
 				bodyBuilder.Reset()
 			}
 
-			// 保存当前请求名
+			// 保存当前请求名（不再包含注释）
 			currentName = matches[1]
+			currentDescription = ""            // 重置描述
 			readingRequestComment = true       // 标记正在读取请求注释
 			foundEmptyLineAfterHeaders = false // 重置标记
 			continue
 		}
 
-		// 处理注释行，但保留一些特殊注释
+		// 处理注释行，现在注释内容不会添加到请求名中
 		if strings.HasPrefix(line, "#") {
 			if readingRequestComment {
-				// 将注释内容添加到请求名称（如果正在读取请求注释）
+				// 收集注释作为请求的描述（而不是名称的一部分）
 				commentText := strings.TrimSpace(line[1:])
 				if commentText != "" {
-					if currentName != "" {
-						currentName += " - "
+					if currentDescription != "" {
+						currentDescription += "\n"
 					}
-					currentName += commentText
+					currentDescription += commentText
 				}
 			}
 			continue
@@ -120,17 +122,19 @@ func ParseFile(filePath string) (*models.HTTPFile, error) {
 
 			// 创建新请求
 			currentRequest = &models.HTTPRequest{
-				Name:       currentName,
-				Method:     method,
-				URL:        parsedURL,
-				Headers:    make(http.Header),
-				Variables:  make(map[string]string),
-				LineNumber: lineNum,
+				Name:        currentName,
+				Description: currentDescription, // 保存收集的注释内容
+				Method:      method,
+				URL:         parsedURL,
+				Headers:     make(http.Header),
+				Variables:   make(map[string]string),
+				LineNumber:  lineNum,
 			}
 			httpFile.AddRequest(currentRequest)
 
 			// 重置状态
 			currentName = ""
+			currentDescription = ""
 			readingRequestComment = false
 			isReadingBody = false
 			foundEmptyLineAfterHeaders = false

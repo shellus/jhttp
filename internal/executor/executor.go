@@ -196,6 +196,9 @@ func (e *Executor) ExecuteFile(httpFile *models.HTTPFile, requestName string, en
 	for _, req := range httpFile.Requests {
 		if e.verbose {
 			fmt.Printf("\n===== 执行请求: %s =====\n", req.Name)
+			if req.Description != "" {
+				fmt.Printf("描述: %s\n\n", req.Description)
+			}
 		}
 
 		resp, err := e.Execute(httpFile, req, env)

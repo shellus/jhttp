@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/shellus/jhttp/internal/cli"
 	"github.com/shellus/jhttp/internal/environment"
@@ -69,6 +70,13 @@ func main() {
 					displayName = fmt.Sprintf("%s %s", req.Method, req.URL)
 				}
 				fmt.Printf("%3d. %s\n", i+1, displayName)
+				if req.Description != "" {
+					// 对描述进行处理，确保多行描述缩进对齐
+					descLines := strings.Split(req.Description, "\n")
+					for _, line := range descLines {
+						fmt.Printf("     描述: %s\n", line)
+					}
+				}
 			}
 		}
 		os.Exit(exitSuccess)
