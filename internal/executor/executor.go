@@ -2,6 +2,7 @@ package executor
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -38,6 +39,22 @@ func NewExecutor(verbose bool) *Executor {
 // SetTimeout 设置HTTP请求超时时间
 func (e *Executor) SetTimeout(timeout time.Duration) {
 	e.client.Timeout = timeout
+}
+
+// formatJSON 格式化JSON输出，确保中文不被转码
+func formatJSON(data []byte) (string, error) {
+	var v interface{}
+	if err := json.Unmarshal(data, &v); err != nil {
+		return "", err
+	}
+	
+	// 使用json.MarshalIndent来格式化JSON，并确保中文不被转码
+	formatted, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	
+	return string(formatted), nil
 }
 
 // Execute 执行单个HTTP请求
@@ -160,8 +177,13 @@ func (e *Executor) Execute(httpFile *models.HTTPFile, request *models.HTTPReques
 			// 检查Content-Type以决定如何格式化输出
 			contentType := resp.Header.Get("Content-Type")
 			if strings.Contains(contentType, "application/json") {
-				// 尝试美化JSON输出（这是简化版，实际中可以使用json包格式化）
-				fmt.Println(response.BodyString)
+				// 尝试格式化JSON输出
+				formatted, err := formatJSON(response.Body)
+				if err == nil {
+					fmt.Println(formatted)
+				} else {
+					fmt.Println(response.BodyString)
+				}
 			} else {
 				fmt.Println(response.BodyString)
 			}
@@ -278,8 +300,13 @@ func PrintResponse(resp *models.HTTPResponse) {
 		// 检查Content-Type以决定如何格式化输出
 		contentType := resp.Headers.Get("Content-Type")
 		if strings.Contains(contentType, "application/json") {
-			// 尝试美化JSON输出（这是简化版）
-			fmt.Println(resp.BodyString)
+			// 尝试格式化JSON输出
+			formatted, err := formatJSON(resp.Body)
+			if err == nil {
+				fmt.Println(formatted)
+			} else {
+				fmt.Println(resp.BodyString)
+			}
 		} else {
 			fmt.Println(resp.BodyString)
 		}
