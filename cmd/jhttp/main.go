@@ -33,26 +33,13 @@ func main() {
 		}
 		
 		fmt.Fprintf(os.Stderr, "错误: %v\n", err)
-		cli.PrintUsage(os.Stderr, progName)
 		os.Exit(exitFailure)
-	}
-
-	// 显示版本信息并退出
-	if opts.ShowVersion {
-		fmt.Printf("%s 版本 0.1.0\n", progName)
-		os.Exit(exitSuccess)
-	}
-
-	// 显示帮助信息并退出
-	if opts.ShowHelp {
-		cli.PrintUsage(os.Stdout, progName)
-		os.Exit(exitSuccess)
 	}
 
 	// 检查是否提供了HTTP文件
 	if opts.HTTPFile == "" {
 		fmt.Fprintln(os.Stderr, "错误: 必须提供一个.http文件")
-		cli.PrintUsage(os.Stderr, progName)
+		// 因为cli已经从PrintUsage改为使用内置帮助，这里也要适应这个变化
 		os.Exit(exitFailure)
 	}
 
