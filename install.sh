@@ -43,7 +43,7 @@ fi
 
 # 移动文件
 echo "正在安装到 /usr/local/bin..."
-mv jhttp /usr/local/bin/
+cp jhttp /usr/local/bin/
 
 # 验证安装
 if command -v jhttp &> /dev/null; then

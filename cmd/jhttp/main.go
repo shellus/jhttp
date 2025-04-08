@@ -85,8 +85,8 @@ func main() {
 	// 处理环境变量文件
 	var envVars map[string]string
 
-	if opts.EnvFile != "" && opts.Env != "" {
-		// 用户指定了环境文件路径和环境名称
+	if opts.EnvFile != "" {
+		// 用户指定了环境文件路径
 		envVars, err = environment.LoadEnvFile(opts.EnvFile, opts.Env)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "加载环境变量错误: %v\n", err)
@@ -96,8 +96,8 @@ func main() {
 		if opts.Verbose {
 			fmt.Printf("已从 '%s' 加载环境 '%s' 中的 %d 个变量\n", opts.EnvFile, opts.Env, len(envVars))
 		}
-	} else if opts.Env != "" {
-		// 用户只指定了环境名称，尝试自动查找环境文件
+	} else {
+		// 尝试自动查找环境文件
 		envFilePath, found, needWarning := environment.FindEnvFile(opts.HTTPFile)
 		if found {
 			envVars, err = environment.LoadEnvFile(envFilePath, opts.Env)
@@ -114,19 +114,19 @@ func main() {
 				fmt.Printf("已从 '%s' 加载环境 '%s' 中的 %d 个变量\n", envFilePath, opts.Env, len(envVars))
 			}
 		} else {
-			fmt.Fprintf(os.Stderr, "错误: 未找到环境文件，但指定了环境名称 '%s'\n", opts.Env)
-			fmt.Fprintln(os.Stderr, "请使用 --env-file 参数指定环境文件路径，或确保在.http文件所在目录或上级目录有环境文件")
-			os.Exit(exitFailure)
+			// 没有找到环境文件，但有默认环境，创建一个空的环境变量集
+			if opts.Verbose {
+				fmt.Printf("注意: 未找到环境文件，将使用空的环境变量集 '%s'\n", opts.Env)
+			}
+			envVars = make(map[string]string)
 		}
 	}
 
 	// 将环境变量添加到HTTP文件
-	if envVars != nil {
-		if httpFile.EnvironmentVars == nil {
-			httpFile.EnvironmentVars = make(map[string]map[string]string)
-		}
-		httpFile.EnvironmentVars[opts.Env] = envVars
+	if httpFile.EnvironmentVars == nil {
+		httpFile.EnvironmentVars = make(map[string]map[string]string)
 	}
+	httpFile.EnvironmentVars[opts.Env] = envVars
 
 	// 创建执行器
 	exec := executor.NewExecutor(opts.Verbose)
@@ -140,7 +140,7 @@ func main() {
 
 	// 如果没有启用详细模式，但指定了单个请求，打印响应结果
 	if !opts.Verbose && opts.RequestName != "" && len(responses) > 0 {
-		executor.PrintResponse(responses[0])
+		executor.PrintResponse(responses[0], opts.Verbose)
 	} else if !opts.Verbose {
 		fmt.Printf("成功执行 %d 个HTTP请求\n", len(responses))
 		for i, resp := range responses {

@@ -276,7 +276,7 @@ func (e *Executor) createHTTPRequest(req *models.HTTPRequest) (*http.Request, er
 }
 
 // PrintResponse 打印响应结果
-func PrintResponse(resp *models.HTTPResponse) {
+func PrintResponse(resp *models.HTTPResponse, verbose bool) {
 	if resp.Error != nil {
 		fmt.Printf("请求失败: %v\n", resp.Error)
 		fmt.Printf("请求耗时: %d ms\n", resp.Time)
@@ -286,10 +286,12 @@ func PrintResponse(resp *models.HTTPResponse) {
 	// 打印状态行
 	fmt.Printf("HTTP/1.1 %s\n", resp.Status)
 
-	// 打印响应头
-	for name, values := range resp.Headers {
-		for _, value := range values {
-			fmt.Printf("%s: %s\n", name, value)
+	// 只在verbose模式下打印响应头
+	if verbose {
+		for name, values := range resp.Headers {
+			for _, value := range values {
+				fmt.Printf("%s: %s\n", name, value)
+			}
 		}
 	}
 
