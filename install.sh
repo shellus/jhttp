@@ -48,7 +48,7 @@ cp jhttp /usr/local/bin/
 # 验证安装
 if command -v jhttp &> /dev/null; then
     echo "安装成功！"
-    echo "jhttp 版本: $(jhttp --version)"
+    echo "jhttp 版本: $(jhttp -version)"
 else
     echo "警告: 安装可能未成功，请检查 PATH 环境变量"
 fi 

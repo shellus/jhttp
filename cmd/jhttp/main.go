@@ -27,6 +27,11 @@ func main() {
 	// 解析命令行参数
 	opts, err := cli.ParseArgs(os.Args[1:])
 	if err != nil {
+		// 特殊情况：显示版本或帮助信息的错误是正常的
+		if err.Error() == "显示信息完成" {
+			os.Exit(exitSuccess)
+		}
+		
 		fmt.Fprintf(os.Stderr, "错误: %v\n", err)
 		cli.PrintUsage(os.Stderr, progName)
 		os.Exit(exitFailure)
@@ -138,10 +143,15 @@ func main() {
 		os.Exit(exitFailure)
 	}
 
-	// 如果没有启用详细模式，但指定了单个请求，打印响应结果
-	if !opts.Verbose && opts.RequestName != "" && len(responses) > 0 {
-		executor.PrintResponse(responses[0], opts.Verbose)
+	// 处理响应结果
+	if opts.RequestName != "" && len(responses) > 0 {
+		// 对于单个请求，如果不是verbose模式，打印响应结果
+		// verbose模式下，Execute函数已经打印了详细信息，不需要再次打印
+		if !opts.Verbose {
+			executor.PrintResponse(responses[0], opts.Verbose)
+		}
 	} else if !opts.Verbose {
+		// 对于多个请求，在非verbose模式下，打印简要信息
 		fmt.Printf("成功执行 %d 个HTTP请求\n", len(responses))
 		for i, resp := range responses {
 			fmt.Printf("\n请求 #%d: %s\n", i+1, resp.Request.Name)
